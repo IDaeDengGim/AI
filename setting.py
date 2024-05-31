@@ -12,7 +12,7 @@ def to_markdown(text):
   return Markdown(textwrap.indent(text, '> ', predicate=lambda _: True))
  
 # 제미나이 API 키 설정
-genai.configure(api_key="AIzaSyCBfkbUEidZI5EOezJDGT9QU51kn1E9zoc")
+genai.configure(api_key="API key 입력")
 
 
 # 모델 설정
