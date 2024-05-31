@@ -10,12 +10,24 @@ pip install mysql-connector-python
 
 pip install python-dotenv
 
+
+## .env 파일 세팅
+.env 파일 생성
+> .env 파일 유출 주의
+
+```
+GEMINI_API_KEY="gemini api 페이지에서 본인 api key 받아서 넣기"
+
+DB_USER = 
+
+DB_PASSWORD = 
+
+DB_HOST=
+
+DB_NAME=
+```
+
 <!-- 다운 받고 시작!! -->
-
-=======
-그럼 가상 환경에서 ai 파일이 돌아가게 됨.
-
-- gemini api 페이지에서 본인 api key 받아서 넣으면 됨!
 
 ## 주의
 
