@@ -12,9 +12,16 @@ pip install python-dotenv
 
 <!-- 다운 받고 시작!! -->
 
+=======
 그럼 가상 환경에서 ai 파일이 돌아가게 됨.
 
-### 주의
+- gemini api 페이지에서 본인 api key 받아서 넣으면 됨!
 
-.venv와 클론 받은 AI 는 동일한 폴더 계층을 가져야함.
-(AI파일이 .venv 폴더안에 들어가 있으면 안 됨.)
+## 주의
+
+영화 시놉시스가 아래와 같은 내용을 담고 있으면 예외 발생함.
+
+- HARM_CATEGORY_SEXUALLY_EXPLICIT: 성적으로 노골적인 콘텐츠
+- HARM_CATEGORY_HATE_SPEECH: 증오 발언
+- HARM_CATEGORY_HARASSMENT: 괴롭힘
+- HARM_CATEGORY_DANGEROUS_CONTENT: 위험한 콘텐츠
