@@ -4,9 +4,9 @@ pip install -q -U google-generativeai
 
 pip install ipython​
 
-<!-- 다운 받고 시작!! -->
-
 그럼 가상 환경에서 ai 파일이 돌아가게 됨.
+
+- gemini api 페이지에서 본인 api key 받아서 넣으면 됨!
 
 ## 주의
 
