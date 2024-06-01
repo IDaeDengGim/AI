@@ -62,21 +62,28 @@ cursor.execute(create_table_query)
 # Gemni API를 사용하여 태그와 장르 추출 및 저장
 for movie in movies:
     movie_id, synopsys, intent = movie
-    print(movie_id)
     input_text = f"{synopsys} {intent}"
 
     chat = model.start_chat(history=[])
+    
+    try:
+        response_tag = chat.send_message(input_text + ":다음은 영화에 관한 설명이야. 영화를 설명할 수 있는 주요 키워드 3개를 comma로 구분해서 알려줘. 결과값은 한국어로 부탁해.")
+        tags = response_tag.text.strip()
 
-    response_tag = chat.send_message(input_text + ":다음은 영화에 관한 설명이야. 여기서 가장 중요한 키워드 단어 3개를 '한국어'로 알려줘.")
-    tags = response_tag.text.strip()
+        response_genre = chat.send_message(input_text + ":이 시놉시스로 미루어볼때 어떤 장르의 영화같아? 장르 2개를 comma로 구분해서 알려줘. 결과값은 한국어로 부탁해.")
+        genres = response_genre.text.strip()
 
-    response_genre = chat.send_message(input_text + ":이 시놉시스로 미루어볼때 어떤 장르의 영화같아? 장르 2개만 알려줘. 이 외에 불필요한 말은 안 해도 돼.")
-    genres = response_genre.text.strip()
+        # 결과를 ai_tag 테이블에 저장
+        insert_query = "INSERT INTO ai_tag (id, tag, genre) VALUES (%s, %s, %s) ON DUPLICATE KEY UPDATE tag=%s, genre=%s"
+        cursor.execute(insert_query, (movie_id, tags, genres, tags, genres))
 
-    # 결과를 ai_tag 테이블에 저장
-    insert_query = "INSERT INTO ai_tag (id, tag, genre) VALUES (%s, %s, %s) ON DUPLICATE KEY UPDATE tag=%s, genre=%s"
-    cursor.execute(insert_query, (movie_id, tags, genres, tags, genres))
-
+        print(str(movie_id)+") Tags:", tags)
+        print("Genres:", genres)
+    
+    except genai.types.generation_types.StopCandidateException as e:
+        print(str(movie_id)+": An error occurred") # error 처리
+        continue
+    
 # 변경사항 커밋 및 MySQL 연결 종료
 conn.commit()
 cursor.close()
