@@ -36,7 +36,7 @@ conn = mysql.connector.connect(**db_config)
 cursor = conn.cursor()
 
 # 영화 데이터 가져오기
-query = "SELECT id, synopsys, intent FROM movie WHERE id BETWEEN 1 AND 5"
+query = "SELECT id, synopsys, intent FROM movie WHERE id BETWEEN 101 AND 150"
 cursor.execute(query)
 movies = cursor.fetchall()
 
@@ -50,8 +50,8 @@ movies = cursor.fetchall()
 # cursor.execute(create_table_query)
 
 # 프롬프트 설정
-tag_prompt = ":다음은 영화에 관한 설명이야. 영화를 설명할 수 있는 주요 키워드 2~3개를 comma로 구분해서 알려줘. 결과값은 한국어로 부탁해."
-genre_prompt = ":이 시놉시스로 미루어볼때 어떤 장르의 영화같아? 장르 2개를 comma로 구분해서 알려줘. 결과값은 한국어로 부탁해."
+tag_prompt = ":다음은 영화에 관한 설명이야. 영화를 설명할 수 있는 주요 키워드 2~3개를 ','로 구분해서 알려줘. 결과값은 한국어로 부탁해."
+genre_prompt = ":이 시놉시스로 미루어볼때 어떤 장르의 영화같아? 장르 2개를 ','로 구분해서 알려줘. 결과값은 한국어로 부탁해."
 
 # Gemni API를 사용하여 태그와 장르 추출 및 저장
 for movie in movies:
@@ -69,7 +69,7 @@ for movie in movies:
 
             # tags 테이블에 INSERT
             for tag in tags:
-                insert_query = "INSERT INTO tags (tag_name) VALUES (%s) ON DUPLICATE KEY UPDATE tag_name=%s"
+                insert_query = "INSERT INTO tag (name) VALUES (%s) ON DUPLICATE KEY UPDATE name=%s"
                 cursor.execute(insert_query, (tag,tag))
                 
             # genre 추출  
@@ -78,15 +78,15 @@ for movie in movies:
 
             # genres 테이블에 INSERT
             for genre in genres:
-                insert_query = "INSERT INTO genres (genre_name) VALUES (%s) ON DUPLICATE KEY UPDATE genre_name=%s"
+                insert_query = "INSERT INTO genre (name) VALUES (%s) ON DUPLICATE KEY UPDATE name=%s"
                 cursor.execute(insert_query, (genre, genre))
                 
             # INSERT한 tags, genres에서 id 가져오기
-            select_query = f"SELECT id FROM tags WHERE tag_name IN ({','.join(['%s']*len(tags))})"
+            select_query = f"SELECT id FROM tag WHERE name IN ({','.join(['%s']*len(tags))})"
             cursor.execute(select_query, tuple(tags))
             tag_ids = [row[0] for row in cursor.fetchall()]
 
-            select_query = f"SELECT id FROM genres WHERE genre_name IN ({','.join(['%s']*len(genres))})"
+            select_query = f"SELECT id FROM genre WHERE name IN ({','.join(['%s']*len(genres))})"
             cursor.execute(select_query, tuple(genres))
             genre_ids = [row[0] for row in cursor.fetchall()]
 
